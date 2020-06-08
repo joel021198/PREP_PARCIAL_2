@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PAISES.Models;
+using PAISES.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,6 +9,11 @@ namespace PAISES.ViewModels
    public class CountryViewModel:BaseViewModel
     {
         //api service
+        #region Services
+        private ApiService apiService;
+        #endregion
+
+
 
         #region Attributes
         private string name;
@@ -35,18 +42,24 @@ namespace PAISES.ViewModels
         #region Constructor
         public CountryViewModel()
         {
+            this.apiService = new ApiService();
             this.LoadCountry();
         }
         #endregion
 
         
         #region Methods        
-        private void LoadCountry()
+        private async void LoadCountry()
         {
-            throw new NotImplementedException();
+            var country = await this.apiService.Get<Country>(
+                "https://restcountries.eu/",
+                "rest/v2/",
+                "name/bolivia"
+                );
+            this.Name = country[0].Name;
+            this.Capital = country[0].Capital;
+            this.Alpha2Code = country[0].Alpha2Code;
         }
-        #endregion
-
-
+        #endregion  
     }
 }
